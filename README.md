@@ -6,15 +6,15 @@ This is designed to make creating quotes easier and quicker from Sage CRM.
 
 Files are installed on the following folders:
 
-  wwwroot/js/custom
+    wwwroot/js/custom
   
   and
   
-  wwwroot/custompages/ctItemPicker
+    wwwroot/custompages/ctItemPicker
   
 A button group is created on Quotes Summary an a button added here also. 
 
-Screen shot 
+  Screen shot 
 
 <img src="https://github.com/crmtogether/Rapid-Item-Picker/blob/master/RapidItemPicker.png" />
 
