@@ -16,3 +16,5 @@ Screen shot
 <img src="https://github.com/crmtogether/Rapid-Item-Picker/blob/master/RapidItemPicker.png" />
 
 
+The component ZIP file is available from 
+https://github.com/crmtogether/Rapid-Item-Picker/tree/master/src
