@@ -16,7 +16,3 @@ Screen shot
 <img src="https://github.com/crmtogether/Rapid-Item-Picker/blob/master/RapidItemPicker.png" />
 
 
-You can download the component zip file from here
-
-<a href="https://github.com/crmtogether/Rapid-Item-Picker/blob/master/src/ctItemPicker.zip" >ctItemPicker</a>
-
