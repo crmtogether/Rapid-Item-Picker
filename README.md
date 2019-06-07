@@ -12,7 +12,7 @@ Files are installed on the following folders:
   
     wwwroot/custompages/ctItemPicker
   
-A button group is created on Quotes Summary an a button added here also. 
+A button group is created on Quotes Summary an a button added here also (after installing the component you need to reload metadata to see the button or restart IIS or recycle the CRM application pool). 
 
   Screen shot 
 
