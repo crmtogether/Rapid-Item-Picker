@@ -11,3 +11,6 @@ Files are installed on the following folders:
   
 A button group is created on Quotes Summary an a button added here also. 
 
+Screen shot 
+
+<img src="https://github.com/crmtogether/Rapid-Item-Picker/blob/master/RapidItemPicker.png" />
