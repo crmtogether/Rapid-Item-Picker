@@ -1,0 +1,5 @@
+Description=Rapid Item Picker from crmtogether.com
+Directory=ctItemPicker
+multipleinstalls=y
+errorhandling=strict
+Version=2018
