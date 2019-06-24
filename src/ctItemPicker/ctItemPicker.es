@@ -1,4 +1,23 @@
 ﻿
+ObjectName='CRMTogetherOS';
+ObjectType='TabGroup';
+EntityName='system';
+var CObjId10869 = AddScreenObject();
+
+var TabsId11081 = AddCustom_Tabs(0,0,11,'Admin','CRM Together OS','customfile','CRMTogetherOS/admin.asp','','waves.gif',0,'',false,0);
+
+var TabsId11082 = AddCustom_Tabs(0,0,1,'CRMTogetherOS','Home','customfile','CRMTogetherOS/admin.asp','','',0,'',false,0);
+
+var TabsId11083 = AddCustom_Tabs(0,0,2,'CRMTogetherOS','Rapid Item Picker','customfile','ctItemPicker/ctItemPicker.asp','','',0,'',false,0);
+
+//copy files
+var CRMTogetherOS="CRMTogetherOS";
+CreateNewDir(GetDLLDir() + '\\CustomPages\\' + CRMTogetherOS);
+CopyASPTo(CRMTogetherOS+'\\admin.asp','\\CustomPages\\'+CRMTogetherOS+'\\admin.asp');
+CopyASPTo(CRMTogetherOS+'\\sagecrm.js','\\CustomPages\\'+CRMTogetherOS+'\\sagecrm.js');
+CopyASPTo(CRMTogetherOS+'\\sagecrmnolang.js','\\CustomPages\\'+CRMTogetherOS+'\\sagecrmnolang.js');
+
+
 var ctItemPicker="ctItemPicker";
 CreateNewDir(GetDLLDir() + '\\CustomPages\\' + ctItemPicker);
 CopyASPTo(ctItemPicker+'\\addQuoteItem.asp','\\CustomPages\\'+ctItemPicker+'\\addQuoteItem.asp');
@@ -25,6 +44,10 @@ CopyASPTo(ctItemPicker+'\\uom_family_inc.asp','\\CustomPages\\'+ctItemPicker+'\\
 CopyASPTo(ctItemPicker+'\\uom_inc.asp','\\CustomPages\\'+ctItemPicker+'\\uom_inc.asp');
 CopyASPTo(ctItemPicker+'\\updateQuoteItem.asp','\\CustomPages\\'+ctItemPicker+'\\updateQuoteItem.asp');
 CopyASPTo(ctItemPicker+'\\updateQuoteItempos.asp','\\CustomPages\\'+ctItemPicker+'\\updateQuoteItempos.asp');
+
+CopyASPTo(ctItemPicker+'\\sagecrmnolang.js','\\CustomPages\\'+ctItemPicker+'\\sagecrmnolang.js');
+CopyASPTo(ctItemPicker+'\\sagecrm.js','\\CustomPages\\'+ctItemPicker+'\\sagecrm.js');
+CopyASPTo(ctItemPicker+'\\ctItemPicker.asp','\\CustomPages\\'+ctItemPicker+'\\ctItemPicker.asp');
 
 CopyASPTo('\\js\\custommodal.css','\\js\\custom\\custommodal.css');
 CopyASPTo('\\js\\custommodal.js','\\js\\custom\\custommodal.js');
