@@ -16,7 +16,7 @@ _obj.sql="SELECT TOP 51  prfa_productfamilyid, prfa_name FROM ProductFamily "+
 		"prfa_productfamilyid IN (select prod_productfamilyid from newproduct where prod_productid  "+
 		"in(select pric_productid from pricing WHERE pric_deleted IS NULL AND pric_pricinglistid  "+
 		"=(select quot_pricinglistid from quotes where quot_orderquoteid = "+quoteid+" and pricing.pric_price_cid = quotes.quot_currency)))  "+
-		"and ((prfa_intid is null and prfa_active= N'Y' )) "+
+		"and ((prfa_active= N'Y' )) "+
  		"order by prfa_name"; 
 
 _obj.columns=new Array();
