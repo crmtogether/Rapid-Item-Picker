@@ -379,7 +379,9 @@ function __onchangeQuoteItem(sender, qiid,productobj)
 	  var _qty=$('#quit_quantity__line_item_'+ qiid).val();
 	  var _qprice=$('#quit_quotedprice__line_item_'+ qiid).val();
       $('#QuIt_quotedpricetotal_'+ qiid).html(_formatMoney(_qprice*_qty));
-	  var _lp=getListPriceval(productobj, sender.value);
+	  var _lp=0;
+	  if (sender!=null)
+		_lp=getListPriceval(productobj, sender.value);
 	  $('#QuIt_listprice_'+ qiid).text(_lp);
 	  // QuIt_discount_1294
 	  $('#QuIt_discount_'+ qiid).html(_formatMoney(_lp-_qprice));
@@ -428,7 +430,12 @@ function getProductObj(prod_productid)
 		}
 	}
 	console.log("getProductObj: no product found");
-	return null;
+	
+	//create a dummy empty object
+	
+return {"prod_Active": "Y","prod_UOMCategory": "-1","prod_code": "","prod_name": "","prod_productfamilyid": "-1","prod_productid": "-1"}
+	
+//	return null;
 }
 function getUOM_UOMObj(uomfamilyid)
 {
@@ -441,7 +448,7 @@ function getUOM_UOMObj(uomfamilyid)
 		  return obj;
 		}
 	}
-	return null;
+	return {"UOM_UOMID": "-1","uom_Active": "Y","uom_defaultvalue": "Y","uom_description": "","uom_familyID": "-1","uom_name": "Default","uom_units": "-1"};
 }
 function getUOM_UOMObj2(uomid)
 {
@@ -454,7 +461,8 @@ function getUOM_UOMObj2(uomid)
 		  return obj;
 		}
 	}
-	return null;
+	return {"UOM_UOMID": "-1","uom_Active": "Y","uom_defaultvalue": "Y","uom_description": "","uom_familyID": "-1","uom_name": "Default","uom_units": "-1"};
+
 }
 function getQuantity(productobj, defaultvalue){
   console.log("getQuantity:"+JSON.stringify(productobj));
@@ -628,63 +636,81 @@ function createQuoteItemsTable()
 		console.log("QuIt_linenumber:"+obj["QuIt_linenumber"]);
 
 		//product name
-		html += '<td class="'+_row+'">';
-		html += obj["prod_name"];
+		
+		if (obj["QuIt_LineType"]=="c")
+		{
+			html += '<td class="'+_row+'" colspan="7" >';
+			html += obj["QuIt_description"];
+		}else{
+			//QuIt_description
+			html += '<td class="'+_row+'" >';
+			if (obj["QuIt_LineType"]=="f")
+				html += obj["QuIt_description"];
+			else
+				html += obj["prod_name"];
+		}
 		html += '</td>';
 				
 		//product name
-		html += '<td class="'+_row+'">';
-		html += product["prod_code"];
-		html += '</td>';
-		
-		//uom
-		html += '<td class="'+_row+'" ct_QuIt_UOMID="'+obj["QuIt_UOMID"]+'" >';
-		if (canEditItem)
+		if (obj["QuIt_LineType"]!="c")
 		{
-			console.log("getUOMSelect calling...:"+obj["QuIt_LineItemID"]);
-			html += getUOMSelect(product,obj["QuIt_UOMID"],obj);
-			console.log("getUOMSelect called");
-		}else{
-			html += getUOMText(obj);
+			html += '<td class="'+_row+'">';
+			html += product["prod_code"];
+			html += '</td>';
+			//uom
+			html += '<td class="'+_row+'" ct_QuIt_UOMID="'+obj["QuIt_UOMID"]+'" >';
+			if (obj["QuIt_LineType"]!="f")
+			{
+				if (canEditItem)
+				{
+					console.log("getUOMSelect calling...:"+obj["QuIt_LineItemID"]);
+					html += getUOMSelect(product,obj["QuIt_UOMID"],obj);
+					console.log("getUOMSelect called");
+				}else{
+					html += getUOMText(obj);
+				}
+			}
+			html += '</td>';
+			
+			//quantity
+			html += '<td class="'+_row+'">';
+			if (canEditItem)
+			{
+				html += getQuantity(obj, obj["QuIt_quantity"]);
+			}else{
+				html += _formatMoney(obj["QuIt_quantity"]);
+			}
+			html += '</td>';
+			
+			//list price
+			html += '<td class="'+_row+'" >';
+			if (obj["QuIt_LineType"]!="f")
+				html += '<span id="QuIt_listprice_'+obj["QuIt_LineItemID"]+'" >'+ _formatMoney(obj["QuIt_listprice"])+"</span>";
+			else
+				html += '<span id="QuIt_listprice_'+obj["QuIt_LineItemID"]+'" >'+ _formatMoney(0)+"</span>";			
+			html += '</td>';
+			
+			//quoted price
+			html += '<td class="'+_row+' " >';
+			if (canEditItem)
+			{
+				html += getQuotedPrice(product,obj["QuIt_quotedprice"],obj);
+			}else{
+				html += _formatMoney(obj["QuIt_quotedprice"]);
+			}
+			html += '</td>';
+			
+			//removed 15 may 2019 on request
+			//line item discount
+			//html += '<td class="'+_row+' " >';
+			//html += '<span id="QuIt_discount_'+obj["QuIt_LineItemID"]+'" >'+_formatMoney(obj["QuIt_discount"])+"</span>";
+			//html += '</td>';
+			
+			//quoted sum/total
+			html += '<td class="'+_row+' " >';
+			html += '<span id="QuIt_quotedpricetotal_'+obj["QuIt_LineItemID"]+'" >'+_formatMoney(obj["QuIt_quotedpricetotal"])+"</span>";
+			html += '</td>';	
 		}
-		html += '</td>';
-		
-		//quantity
-		html += '<td class="'+_row+'">';
-		if (canEditItem)
-		{
-		    html += getQuantity(obj, obj["QuIt_quantity"]);
-		}else{
-			html += _formatMoney(obj["QuIt_quantity"]);
-		}
-		html += '</td>';
-		
-		//list price
-		html += '<td class="'+_row+'" >';
-		html += '<span id="QuIt_listprice_'+obj["QuIt_LineItemID"]+'" >'+ _formatMoney(obj["QuIt_listprice"])+"</span>";
-		html += '</td>';
-		
-		//quoted price
-		html += '<td class="'+_row+' " >';
-		if (canEditItem)
-		{
-			html += getQuotedPrice(product,obj["QuIt_quotedprice"],obj);
-		}else{
-			html += _formatMoney(obj["QuIt_quotedprice"]);
-		}
-		html += '</td>';
-		
-		//removed 15 may 2019 on request
-		//line item discount
-		//html += '<td class="'+_row+' " >';
-		//html += '<span id="QuIt_discount_'+obj["QuIt_LineItemID"]+'" >'+_formatMoney(obj["QuIt_discount"])+"</span>";
-		//html += '</td>';
-		
-		//quoted sum/total
-		html += '<td class="'+_row+' " >';
-		html += '<span id="QuIt_quotedpricetotal_'+obj["QuIt_LineItemID"]+'" >'+_formatMoney(obj["QuIt_quotedpricetotal"])+"</span>";
-		html += '</td>';	
-		
 		//delete
 		html += '<td class="'+_row+' ">';
 		var obj = data[i];

@@ -41,18 +41,25 @@ var quot_DiscountPC=quoterec("quot_DiscountPC");
 
 //find QuoteItem
 var QuoteItemsrec=CRM.FindRecord("QuoteItems","QuIt_LineItemId="+QuIt_LineItemId);
+var QuIt_LineType=QuoteItemsrec("QuIt_LineType");
 var QuIt_quantity=new Number(getField("QuIt_quantity"));
 var QuIt_quotedprice=new Number(getField("QuIt_quotedprice"));
-var QuIt_listprice=new Number(getField("QuIt_listprice"));
-QuoteItemsrec("QuIt_UOMID")=getField("QuIt_UOMID");
-QuoteItemsrec("QuIt_productfamilyid")=getField("QuIt_productfamilyid");
+if (QuIt_LineType!="f")
+{
+	var QuIt_listprice=new Number(getField("QuIt_listprice"));
+	QuoteItemsrec("QuIt_UOMID")=getField("QuIt_UOMID");
+	QuoteItemsrec("QuIt_productfamilyid")=getField("QuIt_productfamilyid");
+	QuoteItemsrec("QuIt_listprice")=QuIt_listprice;
+}
 QuoteItemsrec("QuIt_quantity")=QuIt_quantity;
 QuoteItemsrec("QuIt_quotedprice")=QuIt_quotedprice;
-QuoteItemsrec("QuIt_listprice")=QuIt_listprice;
-var QuIt_discount=QuIt_listprice - QuIt_quotedprice;
-QuoteItemsrec("QuIt_discount")=QuIt_discount;//list-quoted 
-QuoteItemsrec("QuIt_discountsum")=QuIt_discount*QuIt_quantity;
-QuoteItemsrec("QuIt_quotedpricetotal")=QuIt_quantity*QuIt_quotedprice;
+if (QuIt_LineType!="f")
+{
+	var QuIt_discount=QuIt_listprice - QuIt_quotedprice;
+	QuoteItemsrec("QuIt_discount")=QuIt_discount;//list-quoted 
+	QuoteItemsrec("QuIt_discountsum")=QuIt_discount*QuIt_quantity;
+	QuoteItemsrec("QuIt_quotedpricetotal")=QuIt_quantity*QuIt_quotedprice;
+}
 QuoteItemsrec.SaveChangesNoTLS();
 _dev("update QuoteItems");
 
