@@ -31,6 +31,144 @@ function undefinedToNum(val)
 	val=val.replace(",","");
 	return val;
 }
+//change the structure....so not to use an index
+function createJSON_New(objar, CRM)
+{
+	var totalsArray=new Array();
+	//var allcolumns=new Array();
+    var grid='{"structureversion":"1",';//version of the json ..use to detemine how to parse it
+	for(var i=0;i<objar.length;i++)
+	{		
+  	  var allcolumns=new Array();
+	  var totalsArray=new Array();
+      var _totals="0d 0h 0m";
+	  grid+='"'+objar[i].title+'":{';
+	  var u=objar[i];
+    	if (u.columnsToTotal)//currency totals
+		{	
+			for(var z=0;z<u.columnsToTotal.length;z++)
+			{
+				totalsArray[u.columnsToTotal[z]]=0;
+			}
+		}	  
+	  var q=CRM.CreateQueryObj(u.sql);
+	  try{
+		q.SelectSQL();
+	  }catch(e)
+	  {
+		Response.Write("Error in SQL: "+u.sql);
+		Response.End();
+	  }
+	  var _rowcomma="";
+	  while(!q.eof)
+	  {
+		grid+=_rowcomma+'"'+fixupJSON(undefinedToBlank(q(objar[i].columns[0])))+'":';
+		grid+='{';
+		var _cellcomma="";
+		for(j=0;j<objar[i].columns.length;j++)
+		{
+			if (objar[i].columns[j].indexOf("_secterr")>0)
+			{
+			  grid+=_cellcomma+'"'+objar[i].columns[j]+'":"'+getTerr(q(objar[i].columns[j]))+'"';				
+			}else{
+			  grid+=_cellcomma+'"'+objar[i].columns[j]+'":"'+fixupJSON(undefinedToBlank(q(objar[i].columns[j])))+'"';
+			}
+			_cellcomma=",";
+		}
+		grid+='}';
+		_rowcomma=',';
+		if (u.columnsToTotalTime)
+	    {
+			_totals=addTime(_totals,undefinedToBlank(q(objar[i].columnsToTotalTime[0])));
+	    }
+		q.NextRecord();
+	  }
+	  if (u.columnsToTotal)////add in total columns
+   	  {  
+	    grid+="{";
+	
+		for (_col in allcolumns) {
+			if (_col=="indexOf")//..weird bug
+			{
+				break;
+			}
+			var _totl="&nbsp;--";//+_col;
+			
+			if (totalsArray.hasOwnProperty(_col))
+			{
+				_totl=getProperty(totalsArray,_col);
+				_totl=formatTotals(_totl);
+			}
+			rowClass="GRIDHEAD";			
+			grid+=''+_totl+'';	
+		}
+		grid+="}";
+	  }
+	grid+="}}";
+	}
+	return grid;
+}
+//change the structure to create an index
+function createJSON_New2(objar, CRM)
+{
+	var totalsArray=new Array();
+	//var allcolumns=new Array();
+    var grid='{"structureversion":"1",';//version of the json ..use to detemine how to parse it
+	for(var i=0;i<objar.length;i++)
+	{		
+  	  var allcolumns=new Array();
+	  var totalsArray=new Array();
+      var _totals="0d 0h 0m";
+	  grid+='"'+objar[i].title+'":{';
+	  var u=objar[i];
+	  var q=CRM.CreateQueryObj(u.sql);
+	  try{
+		q.SelectSQL();
+	  }catch(e)
+	  {
+		Response.Write("Error in SQL: "+u.sql);
+		Response.End();
+	  }
+	  var _rowcomma="";
+	  var _rowcomma2="";
+	  var _prevalue='---';
+	  while(!q.eof)
+	  {
+		if (_prevalue!=q(objar[i].columns[0]))
+		{
+			if (_prevalue!='---')
+			{
+				grid+="]";
+			}
+			grid+=_rowcomma+'"'+fixupJSON(undefinedToBlank(q(objar[i].columns[0])))+'":['; 
+			_prevalue=q(objar[i].columns[0]);
+		}else{
+			grid+=_rowcomma2;
+		}
+		grid+='{';
+		var _cellcomma="";
+		for(j=0;j<objar[i].columns.length;j++)
+		{
+			if (objar[i].columns[j].indexOf("_secterr")>0)
+			{
+			  grid+=_cellcomma+'"'+objar[i].columns[j]+'":"'+getTerr(q(objar[i].columns[j]))+'"';				
+			}else{
+			  grid+=_cellcomma+'"'+objar[i].columns[j]+'":"'+fixupJSON(undefinedToBlank(q(objar[i].columns[j])))+'"';
+			}
+			_cellcomma=",";
+		}
+		grid+='}';
+		_rowcomma=',';	
+		_rowcomma2=',';			
+		q.NextRecord();
+	  }
+		  
+	grid+="]}}";
+	}
+	return grid;
+}
+
+
 function createJSON(objar, CRM)
 {
 	var totalsArray=new Array();
@@ -180,6 +318,10 @@ function getTerr(val)
 }
 function fixupJSON(val)
 {
+	val=val.replace('"','&quot;');
+	val=val.replace('"','&quot;');
+	val=val.replace('"','&quot;');
+	val=val.replace('"','&quot;');
 	val=val.replace('"','&quot;');
 	val=val.replace('"','&quot;');
 	val=val.replace('"','&quot;');

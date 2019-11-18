@@ -5,7 +5,7 @@ var objar=new Array();//this stores our data objects
 var _obj=new Object();
 _obj.sql="select UOM_UOMID,uom_familyID,uom_description"+
 		",uom_units,uom_Active,uom_defaultvalue,uom_name from UOM "+
-		"where uom_Active='Y'";
+		"where uom_Active='Y' and uom_deleted is null";
 		
 _obj.columns=new Array();
 _obj.title="UOM";
@@ -18,7 +18,7 @@ _obj.columns.push('uom_defaultvalue');
 _obj.columns.push('uom_name');
 objar.push(_obj);
 
-var _contentuom=createJSON(objar,CRM);
+var _contentuom=createJSON_New(objar,CRM);
 
 %>
 <script>

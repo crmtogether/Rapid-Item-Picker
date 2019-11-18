@@ -55,6 +55,8 @@ var QuIt_quotedprice=new Number(getField("QuIt_quotedprice"));
 var QuIt_listprice=new Number(getField("QuIt_listprice"));
 QuoteItemsrec("quit_linenumber")=quit_linenumber;
 QuoteItemsrec("QuIt_UOMID")=getField("QuIt_UOMID");
+if (QuoteItemsrec("QuIt_UOMID")+""=="undefined")
+  QuoteItemsrec("QuIt_UOMID")='';
 QuoteItemsrec("QuIt_productid")=getField("QuIt_productid");
 QuoteItemsrec("QuIt_productfamilyid")=getField("QuIt_productfamilyid");
 QuoteItemsrec("QuIt_quantity")=getField("QuIt_quantity");

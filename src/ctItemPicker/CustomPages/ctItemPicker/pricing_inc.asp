@@ -23,15 +23,15 @@ _obj.sql="select "+
 		
 _obj.columns=new Array();
 _obj.title="Pricing";
+_obj.columns.push('pric_ProductID');
 _obj.columns.push('Pric_PricingID');
 _obj.columns.push('pric_UOMID');
-_obj.columns.push('pric_ProductID');
 _obj.columns.push('pric_price');
 _obj.columns.push('pric_price_CID');
 _obj.columns.push('pric_PricingListID');
 objar.push(_obj);
 
-var _content=createJSON(objar,CRM);
+var _content=createJSON_New2(objar,CRM);
 
 %>
 <script>

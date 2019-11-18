@@ -29,5 +29,7 @@ var _contentprodfam=createJSON(objar,CRM);
 
 %>
 <script>
-var _productFamily=<%=_contentprodfam%>
+var _productFamily=<%=_contentprodfam%>;
+
+
 </script>

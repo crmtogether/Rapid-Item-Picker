@@ -47,7 +47,11 @@ var QuIt_quotedprice=new Number(getField("QuIt_quotedprice"));
 if (QuIt_LineType!="f")
 {
 	var QuIt_listprice=new Number(getField("QuIt_listprice"));
-	QuoteItemsrec("QuIt_UOMID")=getField("QuIt_UOMID");
+	var __uomid=new String(getField("QuIt_UOMID"));
+	if (__uomid.indexOf("&")==-1)
+	{
+	  QuoteItemsrec("QuIt_UOMID")=getField("QuIt_UOMID");
+	}
 	QuoteItemsrec("QuIt_productfamilyid")=getField("QuIt_productfamilyid");
 	QuoteItemsrec("QuIt_listprice")=QuIt_listprice;
 }
