@@ -1,4 +1,3 @@
-﻿
 ObjectName='CRMTogetherOS';
 ObjectType='TabGroup';
 EntityName='system';
@@ -31,15 +30,18 @@ CopyASPTo(ctItemPicker+'\\deleteQuoteItem.asp','\\CustomPages\\'+ctItemPicker+'\
 CopyASPTo(ctItemPicker+'\\getQuoteTotals.asp','\\CustomPages\\'+ctItemPicker+'\\getQuoteTotals.asp');
 CopyASPTo(ctItemPicker+'\\json_engine.js','\\CustomPages\\'+ctItemPicker+'\\json_engine.js');
 CopyASPTo(ctItemPicker+'\\json_footer.js','\\CustomPages\\'+ctItemPicker+'\\json_footer.js');
+CopyASPTo(ctItemPicker+'\\json_footer2.js','\\CustomPages\\'+ctItemPicker+'\\json_footer2.js');
 CopyASPTo(ctItemPicker+'\\json_header.js','\\CustomPages\\'+ctItemPicker+'\\json_header.js');
 CopyASPTo(ctItemPicker+'\\pricing_inc.asp','\\CustomPages\\'+ctItemPicker+'\\pricing_inc.asp');
 CopyASPTo(ctItemPicker+'\\pricinglist_inc.asp','\\CustomPages\\'+ctItemPicker+'\\pricinglist_inc.asp');
 CopyASPTo(ctItemPicker+'\\product_family_inc.asp','\\CustomPages\\'+ctItemPicker+'\\product_family_inc.asp');
 CopyASPTo(ctItemPicker+'\\product_family_json.asp','\\CustomPages\\'+ctItemPicker+'\\product_family_json.asp');
 CopyASPTo(ctItemPicker+'\\product_inc.asp','\\CustomPages\\'+ctItemPicker+'\\product_inc.asp');
+CopyASPTo(ctItemPicker+'\\product_inc_ajax.asp','\\CustomPages\\'+ctItemPicker+'\\product_inc_ajax.asp');
 CopyASPTo(ctItemPicker+'\\quote_inc.asp','\\CustomPages\\'+ctItemPicker+'\\quote_inc.asp');
 CopyASPTo(ctItemPicker+'\\quoteitems_inc.asp','\\CustomPages\\'+ctItemPicker+'\\quoteitems_inc.asp');
 CopyASPTo(ctItemPicker+'\\readme.txt','\\CustomPages\\'+ctItemPicker+'\\readme.txt');
+CopyASPTo(ctItemPicker+'\\uom_byfam_inc.asp','\\CustomPages\\'+ctItemPicker+'\\uom_byfam_inc.asp');
 CopyASPTo(ctItemPicker+'\\uom_family_inc.asp','\\CustomPages\\'+ctItemPicker+'\\uom_family_inc.asp');
 CopyASPTo(ctItemPicker+'\\uom_inc.asp','\\CustomPages\\'+ctItemPicker+'\\uom_inc.asp');
 CopyASPTo(ctItemPicker+'\\updateQuoteItem.asp','\\CustomPages\\'+ctItemPicker+'\\updateQuoteItem.asp');
@@ -61,7 +63,3 @@ Properties='Action=1469';
 var CObjId10739 = AddScreenObject();
 
 var TabsId10851 = AddCustom_Tabs(0,0,1,'BGQuotesReport','Rapid Item Picker','customurl','javascript:custommodalitems();','','',0,'',false,0,'1');
-
-
-
-
