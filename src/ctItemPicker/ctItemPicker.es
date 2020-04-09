@@ -37,10 +37,12 @@ CopyASPTo(ctItemPicker+'\\pricinglist_inc.asp','\\CustomPages\\'+ctItemPicker+'\
 CopyASPTo(ctItemPicker+'\\product_family_inc.asp','\\CustomPages\\'+ctItemPicker+'\\product_family_inc.asp');
 CopyASPTo(ctItemPicker+'\\product_family_json.asp','\\CustomPages\\'+ctItemPicker+'\\product_family_json.asp');
 CopyASPTo(ctItemPicker+'\\product_inc.asp','\\CustomPages\\'+ctItemPicker+'\\product_inc.asp');
+CopyASPTo(ctItemPicker+'\\product_inc_ajax.asp','\\CustomPages\\'+ctItemPicker+'\\product_inc_ajax.asp');
 CopyASPTo(ctItemPicker+'\\quote_inc.asp','\\CustomPages\\'+ctItemPicker+'\\quote_inc.asp');
 CopyASPTo(ctItemPicker+'\\quoteitems_inc.asp','\\CustomPages\\'+ctItemPicker+'\\quoteitems_inc.asp');
 CopyASPTo(ctItemPicker+'\\readme.txt','\\CustomPages\\'+ctItemPicker+'\\readme.txt');
 CopyASPTo(ctItemPicker+'\\uom_family_inc.asp','\\CustomPages\\'+ctItemPicker+'\\uom_family_inc.asp');
+CopyASPTo(ctItemPicker+'\\uom_byfam_inc.asp','\\CustomPages\\'+ctItemPicker+'\\uom_byfam_inc.asp');
 CopyASPTo(ctItemPicker+'\\uom_inc.asp','\\CustomPages\\'+ctItemPicker+'\\uom_inc.asp');
 CopyASPTo(ctItemPicker+'\\updateQuoteItem.asp','\\CustomPages\\'+ctItemPicker+'\\updateQuoteItem.asp');
 CopyASPTo(ctItemPicker+'\\updateQuoteItempos.asp','\\CustomPages\\'+ctItemPicker+'\\updateQuoteItempos.asp');
