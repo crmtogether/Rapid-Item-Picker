@@ -35,7 +35,7 @@ $(document).ready(function () {
 
     if (_url.indexOf("custompages") > 0)//for custom asp pages
     {
-        _csspath = "../../js/custom/custommodal.css";
+        _csspath = "/" + crm.installName() + "/js/custom/custommodal.css";
 	}
 	console.log(_csspath);
     $('head').append('<link rel="stylesheet" type="text/css" href="' + _csspath + '" >');
