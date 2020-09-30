@@ -327,6 +327,8 @@ function fixupJSON(val)
 	val=val.replace('"','&quot;');
 	val=val.replace('"','&quot;');
 	
+	val=val.replace(/\n/g,' ');
+	val=val.replace(/\\/g,' ');	
 	return val;
 }
 %>
