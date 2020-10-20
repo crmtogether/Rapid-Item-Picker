@@ -325,6 +325,8 @@ async function popupdateProductTable(family, filter)
 
 	for (var i = 0; i < data.length; i++){
 		var obj = data[i];
+		console.log("popupdateProductTable search :"+filter+"="+obj["prod_name"].toLowerCase());
+		filter = filter.replace(/"/g, '&quot;');
 		if ((!filter)||(obj["prod_name"].toLowerCase().indexOf(filter.toLowerCase())>=0)
 				||(obj["prod_code"].toLowerCase().indexOf(filter.toLowerCase())>=0))
 		{
@@ -426,6 +428,8 @@ function getUOMSelect(productobj, defaultUOM, quoteitemobj)
 	}
 	console.log("getUOMSelect getQuantity _id:"+_id);	
 	var pricingdata=_Pricing.Pricing[_productid];
+	console.log("getUOMSelect pricingdata:"+JSON.stringify(pricingdata));
+	
 	var html = '';
 	if (pricingdata!=null)
 	{
@@ -558,14 +562,18 @@ function getListPriceval(productobj,uomval){
 			  console.log("getListPriceval prod_UOMCategory:"+productobj["prod_UOMCategory"]);
 			  uomobj=getUOM_UOMObj(productobj["prod_UOMCategory"]);
 			}else{
+			  console.log("getListPriceval X prod_UOMCategory:"+productobj["prod_UOMCategory"]);
 			  uomobj=getUOM_UOMObj2(uomval);		
 			}
+			console.log("getListPriceval productobj uomobj!!:"+JSON.stringify(uomobj));
 			if ((obj["pric_UOMID"]==uomobj["UOM_UOMID"]) && (productobj["prod_productid"]==obj["pric_ProductID"]))
 			{
-				console.log(JSON.stringify(obj));
+				console.log("getListPriceval got object:"+JSON.stringify(obj));
 				val = obj["pric_price"];
+				console.log("getListPriceval got object val:"+val);
 			}
 		}
+		console.log("getListPriceval final val:"+val);
 		return val;
 	}
 	return 0;

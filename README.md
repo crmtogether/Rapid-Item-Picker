@@ -40,3 +40,23 @@ Sample SQL code used to mass populate the NewProduct table for testing ONLY
 	End
 ----SQL end
 
+===========================================================================
+
+Example SQL for Product Families displayed..note you must change the quot_orderquoteid value to your value
+----SQL start
+
+SELECT TOP 51  prfa_productfamilyid, prfa_name FROM ProductFamily 
+		WHERE (prfa_name LIKE N'%' ESCAPE '|' OR COALESCE(prfa_name, N'') = N'') 
+		and prfa_Deleted is Null and  prfa_active = N'Y'AND  
+		prfa_productfamilyid IN (select prod_productfamilyid from newproduct where prod_productid  
+		in(select pric_productid from pricing WHERE pric_deleted IS NULL AND pric_pricinglistid  
+		=(select quot_pricinglistid from quotes where quot_orderquoteid = 11 and pricing.pric_price_cid = quotes.quot_currency)))  
+		order by prfa_name
+----SQL end
+
+
+===========================================================================
+How product matching works!
+
+How the matching works is that it checks if the string exists in the product name. At any point. That’s it. So its always a LIKE and you don’t need to put in the % or *. 
+
