@@ -96,6 +96,11 @@
 		return InstallName;
 
 	}
+	
+	//
+	var productCostField = 'prod_cost';
+
+	
 
 %>
 

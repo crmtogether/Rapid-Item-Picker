@@ -8,13 +8,18 @@ _obj.sql="Select "+
 	"QuIt_productid,QuIt_productfamilyid,"+
 	"QuIt_quantity,QuIt_description,Prod_ProductID,"+
 	"QuIt_discount,QuIt_quotedprice,QuIt_quotedpricetotal,QuIt_LineType,"+
-	"QuIt_taxrate, prod_name, prod_code,QuIt_listprice, "+
-	"uom_name,uom_description, QuIt_UOMID "+
-	"from vLineItemsQuote WITH (NOLOCK) "+
-	"left join UOM on QuIt_UOMID=UOM_UOMID "+
-	"where "+
-	"quit_OrderQuoteID = "+quoteid+" and quit_deleted is null "+
-	"order by QuIt_linenumber";
+	"QuIt_taxrate, prod_name, prod_code, QuIt_listprice, "+
+	"uom_name,uom_description, QuIt_UOMID "; 
+	
+	if (productCostField != '') 	
+		_obj.sql += "," + productCostField;
+	
+
+	_obj.sql += " FROM vLineItemsQuote WITH (NOLOCK) "+
+				"left join UOM on QuIt_UOMID=UOM_UOMID "+
+				"where "+
+				"quit_OrderQuoteID = "+quoteid+" and quit_deleted is null "+
+				"order by QuIt_linenumber";
 		
 _obj.columns=new Array();
 _obj.title="QuoteItems";
@@ -34,6 +39,9 @@ _obj.columns.push('QuIt_LineType');
 _obj.columns.push('QuIt_taxrate');
 _obj.columns.push('prod_name');
 _obj.columns.push('prod_code');
+if (productCostField != '') {
+	_obj.columns.push(productCostField);
+	}
 _obj.columns.push('QuIt_listprice');
 _obj.columns.push('uom_name');
 _obj.columns.push('uom_description');

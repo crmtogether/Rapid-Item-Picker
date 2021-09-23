@@ -13,6 +13,7 @@
 <!-- #include file ="pricing_inc.asp" -->
 <%
 var OutputAsJSON=false;//only used in quoteitems_inc
+
 %>
 <style>
 .column {
@@ -88,17 +89,34 @@ height: 300px;
 	</div>
   </div>
   <div class="columnMain">
-  
-  	<span id="_Captproduct" class="VIEWBOXCAPTION">Product:</span><br><span id="_Dataproduct" class="VIEWBOX"><input type="text" class="EDIT" id="product" name="product" value="" maxlength="20" size="20" onkeyup="product_change(this)" ></span><button id="btnproductfilter" onclick="product_change(this)" >Go</button>
-	<span id="familyDisplay" class="VIEWBOXCAPTION familyDisplay">loading...</span>
 	
+	<table>
+	<tr>
+	<td>
+		<span id="_Captproduct" class="VIEWBOXCAPTION">Product:</span><br><span id="_Dataproduct" class="VIEWBOX"><input type="text" class="EDIT" id="product" name="product" value="" maxlength="20" size="20" onkeyup="product_change(this)" ></span><button id="btnproductfilter" onclick="product_change(this)" >Go</button>
+	</td>
+		<td>
+			<span id="_CaptproductMarkup" class="VIEWBOXCAPTION">Markup:</span><br><span id="_DataproductMargin" class="VIEWBOX">
+			<input type="text" class="EDIT" id="productMarkup" name="productMarkup" value="" maxlength="20" size="20"></span>
+			<button id="btnproductMarkup" onclick="product_applyMarkup()" >Apply</button>
+		</td>
+	<td>
+	<span id="familyDisplay" class="VIEWBOXCAPTION familyDisplay">loading...</span>
+	</td>
+	
+<td>
 	<span id="edits_clear" style="float:right" >
 	<button onclick="edits_clear_click(this)" >Clear</button>
 	</span>
 	
 	<span id="edits_use_cache" style="float:right" >
 	<input type="checkbox" id="usecache" name="usecache" checked />Use Local Cache&nbsp;&nbsp;&nbsp;&nbsp;
-	</span>		
+	</span>	
+</td>
+</tr>
+	</table>
+
+	
 	<div id="productTable">
 	
     </div>
@@ -120,6 +138,8 @@ height: 300px;
 
 
 <script>
+
+var productCostField = '<%=productCostField%>';
 
 var G_SelectedProductFamily=-1;
 
@@ -165,6 +185,82 @@ function product_change(sender)
 	popupdateProductTable(G_SelectedProductFamily, $('#product').val());
   }
 }
+
+var updateLineItemsMarkup = [];
+function product_applyMarkup() {
+	updateLineItemsMarkup = [];
+	var markupInput = $("#productMarkup");
+	
+	var markup = parseFloat(markupInput.val());
+	if (isNaN(markup)) {
+		alert("Not a number");
+		markupInput.focus();
+		return;
+	}
+	
+	if (markup > 100) {
+		alert("Should not be greater than 100");
+		markupInput.focus();
+		return;
+	}
+	
+	if (productCostField != '') {
+	
+		console.log(productCostField);
+	
+		var lpArr = $("td[rel='prodCost']");
+		console.log(lpArr);
+		$.each(lpArr, function(i, el) {	
+		
+			var pId = $(el).attr("pId");
+			console.log(pId);
+			var prodCost = parseFloat($(el).attr("data"));
+			console.log(prodCost);
+			var newPrice = prodCost + (prodCost * markup)/100;
+			console.log(newPrice);
+			$("#quit_quotedprice__line_item_" + pId).val(newPrice);	
+
+			__onchangeQuoteItem(document.getElementById('quit_uomid__line_item_' + pId), pId);
+			updateLineItemsMarkup.push(pId);
+
+		});
+		
+	} else {
+	
+		//when using list price for markup caluclations 	
+		
+		var lpArr = $("span[rel='listPrice']");
+		$.each(lpArr, function(i, el) {		
+			var pId = $(el).attr("pId");
+			console.log(pId);
+			var listPrice = parseFloat($(el).attr("data"));
+			//console.log(listPrice);
+			var newPrice = listPrice + (listPrice * markup)/100;
+			//console.log(newPrice);
+			$("#quit_quotedprice__line_item_" + pId).val(newPrice);	
+
+			__onchangeQuoteItem(document.getElementById('quit_uomid__line_item_' + pId), pId);
+			updateLineItemsMarkup.push(pId);
+
+		});
+	}
+	$("#btn_markupUpdateAll").show();
+}
+
+
+
+/*
+updates all line items with the calculated price sum after markup has been applied
+*/
+function markupUpdateAll() {
+	if (updateLineItemsMarkup.length >0) {
+		for (var i=0; i< updateLineItemsMarkup.length;i++) {
+			_update_quoteitem(null,updateLineItemsMarkup[i]);
+		}
+		$("#btn_markupUpdateAll").hide();
+	}
+}
+
 function createProductFamilyTable(filter)
 {
     $('#productfamilyTable').empty();
@@ -210,7 +306,7 @@ function getProductFamilyTitle(id)
 		  break;
 		}
 	}
-} 
+}
 //family is the product family
 function createProductTable(family, filter)
 {
@@ -248,6 +344,14 @@ function createProductTable(family, filter)
 					html += '<td class="'+_row+'" id="prod_code_'+obj["prod_productid"]+'" >';
 					html += obj["prod_code"];
 					html += '</td>';
+					
+					//product cost
+					if (productCostField != '') {
+						html += '<td class="'+_row+'" id="'+productCostField+'_'+obj["prod_productid"]+'" >';
+						html += obj[productCostField];
+						html += '</td>';
+					}
+					
 					//uom
 					html += '<td class="'+_row+'">';
 					var obj = data[i];
@@ -323,10 +427,16 @@ async function popupdateProductTable(family, filter)
 	var html="";
 	console.log("popupdateProductTable **** PRELOOP :"+data.length);
 
-	for (var i = 0; i < data.length; i++){
+
+
+if (filter+""== "undefined") filter = ""; //costi 8 sept  fix for when filter is undefined 
+
+filter = filter.replace(/"/g, '&quot;');
+
+	for (var i = 0; i <  data.length; i++){
 		var obj = data[i];
 		console.log("popupdateProductTable search :"+filter+"="+obj["prod_name"].toLowerCase());
-		filter = filter.replace(/"/g, '&quot;');
+		
 		if ((!filter)||(obj["prod_name"].toLowerCase().indexOf(filter.toLowerCase())>=0)
 				||(obj["prod_code"].toLowerCase().indexOf(filter.toLowerCase())>=0))
 		{
@@ -340,6 +450,14 @@ async function popupdateProductTable(family, filter)
 			html += '<td class="'+_row+'" id="prod_code_'+obj["prod_productid"]+'" >';
 			html += obj["prod_code"];
 			html += '</td>';
+			
+			//product cost
+			if (productCostField != '') {
+				html += '<td class="'+_row+'" id="'+productCostField+'_'+obj["prod_productid"]+'" >';
+				html += obj[productCostField];
+				html += '</td>';
+			}				
+			
 			//uom
 			html += '<td class="'+_row+'">';
 			var obj = data[i];
@@ -395,6 +513,9 @@ function createProductTableNEW()
     html += '<tr id="producttableheaderrowobj" >';
 	html += '<th class="GRIDHEAD">Products</th>';
 	html += '<th class="GRIDHEAD">Code</th>';
+	if (productCostField!= '') {
+		html += '<th class="GRIDHEAD">Cost</th>';
+	}
 	html += '<th class="GRIDHEAD">UOM</th>';
 	html += '<th class="GRIDHEAD">Quantity</th>';
 	html += '<th class="GRIDHEAD">List Price</th>';
@@ -540,6 +661,7 @@ function __onchangeQuoteItemOLD(sender, qiid,productobj)
 	  $('#QuIt_discount_'+ qiid).html(_formatMoney(_lp-_qprice));
 	  flagQIChange(qiid);
 }
+
 function getListPrice(productobj,uomval){
     console.log("getListPrice:"+productobj["prod_productid"]);
 	var html = '<span id="quit_listprice_'+productobj["prod_productid"]+'" class="VIEWBOX">';
@@ -547,6 +669,7 @@ function getListPrice(productobj,uomval){
 	html += '</span>';
 	return html;
 }
+
 function getListPriceval(productobj,uomval){
     console.log("getListPriceval productobj:"+JSON.stringify(productobj));
     console.log("getListPriceval uomval:"+uomval);
@@ -661,7 +784,7 @@ function getQuotedPrice(productobj,defaultvalue, quoteitemobj){
   }
   qval=+qval;
   qval=qval.toFixed(2);
-  return  '<input type="text" class="EDIT" style="float: right;text-align: right;" id="quit_quotedprice_'+_id+'" name="quit_quotedprice_'+_id+'" onchange="'+_onchange+'" value="'+qval+'" maxlength="10" size="5">';
+  return  '<input rel="quotedPrice" type="text" class="EDIT" style="float: right;text-align: right;" id="quit_quotedprice_'+_id+'" name="quit_quotedprice_'+_id+'" onchange="'+_onchange+'" value="'+qval+'" maxlength="10" size="5">';
 }
 
 function _product_family_click(sender, productfamilyid)
@@ -804,6 +927,9 @@ function createQuoteItemsTable()
 	html += '<th class="GRIDHEAD customGridHead" style="width: 30px;" >Line #</th>';
 	html += '<th class="GRIDHEAD customGridHead" style="width: 140px;max-width: 160px;" >Product Name</th>';
 	html += '<th class="GRIDHEAD customGridHead" style="width: 70px;max-width: 80px;" >Code</th>';
+	if (productCostField!= '') {
+		html += '<th class="GRIDHEAD customGridHead" style="width: 70px;max-width: 80px;" >Cost</th>';
+	}
 	html += '<th class="GRIDHEAD customGridHead" style="width: 70px;max-width: 80px;" >UOM</th>';
 	html += '<th class="GRIDHEAD customGridHead" style="width: 70px;" >Quantity</th>';
 	html += '<th class="GRIDHEAD customGridHead" style="width: 60px;">List Price ('+getCurrency()+')</th>';
@@ -812,7 +938,7 @@ function createQuoteItemsTable()
 	//html += '<th class="GRIDHEAD customGridHead" style="width: 100px;">Line Item Discount ('+getCurrency()+')</th>';
 	html += '<th class="GRIDHEAD customGridHead" style="width: 100px;">Quoted Price Sum ('+getCurrency()+')</th>';
 	html += '<th class="GRIDHEAD customGridHead" style="width: 60px;" >&nbsp;</th>';
-	html += '<th class="GRIDHEAD customGridHead" style="width: 60px;" >&nbsp;</th>';
+	html += '<th class="GRIDHEAD customGridHead" style="width: 60px;" ><button style="display:none" id="btn_markupUpdateAll" onclick="markupUpdateAll()">Update All</button></th>';
 	html += '<th class="GRIDHEAD customGridHead" style="width: 20px;" >&nbsp;</th>';
     html += '</tr>';
 	var _row="ROW1";
@@ -850,9 +976,17 @@ function createQuoteItemsTable()
 		if (obj["QuIt_LineType"]!="c")
 		{
 			html += '<td id="prod_code_'+obj["QuIt_LineItemID"]+'" class="'+_row+'">';
-			console.log(JSON.stringify(obj));
+			//console.log(JSON.stringify(obj));
 			html += obj["prod_code"];
 			html += '</td>';
+			
+			if (productCostField != '') {
+				//prod_cost
+				html += '<td rel="prodCost" pId="'+obj["QuIt_LineItemID"]+'" data="'+ obj[productCostField]+'" id="'+ productCostField + '_'+obj["QuIt_LineItemID"]+'" class="'+_row+'">';
+				html += obj[productCostField];
+				html += '</td>';
+			}
+			
 			//uom
 			html += '<td class="'+_row+'" ct_QuIt_UOMID="'+obj["QuIt_UOMID"]+'" >';
 			if (obj["QuIt_LineType"]!="f")
@@ -881,9 +1015,9 @@ function createQuoteItemsTable()
 			//list price
 			html += '<td class="'+_row+'" >';
 			if (obj["QuIt_LineType"]!="f")
-				html += '<span id="QuIt_listprice_'+obj["QuIt_LineItemID"]+'" >'+ _formatMoney(obj["QuIt_listprice"])+"</span>";
+				html += '<span rel="listPrice" pId="'+obj["QuIt_LineItemID"]+'" data="'+ obj["QuIt_listprice"]+'" id="QuIt_listprice_'+obj["QuIt_LineItemID"]+'" >'+ _formatMoney(obj["QuIt_listprice"])+"</span>";
 			else
-				html += '<span id="QuIt_listprice_'+obj["QuIt_LineItemID"]+'" >'+ _formatMoney(0)+"</span>";			
+				html += '<span rel="listPrice" pId="'+obj["QuIt_LineItemID"]+'" data="0" id="QuIt_listprice_'+obj["QuIt_LineItemID"]+'" >'+ _formatMoney(0)+"</span>";			
 			html += '</td>';
 			
 			//quoted price

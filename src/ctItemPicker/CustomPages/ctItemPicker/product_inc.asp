@@ -57,9 +57,17 @@ if (prfa_productfamilyid+""=="undefined")
 _famfilter=" and prod_productfamilyid="+prfa_productfamilyid;
 
 var _obj=new Object();
-_obj.sql="SELECT * FROM (select Row_Number() OVER (ORDER BY prod_name) as rowid,"+
-		"Prod_ProductID,prod_name,prod_code,prod_productfamilyid ,prod_UOMCategory,prod_Active "+
-		"from NewProduct where Prod_Deleted is null and (prod_Active is null or prod_Active='Y') "+_famfilter+
+
+
+_obj.sql="SELECT * FROM (select Row_Number() OVER (ORDER BY prod_name) as rowid," +
+		"Prod_ProductID,prod_name,prod_code,prod_productfamilyid ,prod_UOMCategory,prod_Active ";
+		
+		
+if (productCostField != '') 	
+	_obj.sql += "," + productCostField;
+	
+
+_obj.sql += " FROM NewProduct where Prod_Deleted is null and (prod_Active is null or prod_Active='Y') "+_famfilter+
 		") as a  where rowid >= "+rowsfrom+" and rowid < "+rowsto;
 		
 //Response.Write(_obj.sql);
@@ -69,6 +77,9 @@ _obj.title="Products";
 _obj.columns.push('prod_productid');
 _obj.columns.push('prod_name');
 _obj.columns.push('prod_code');
+if (productCostField != '') {
+	_obj.columns.push(productCostField);
+	}
 _obj.columns.push('prod_productfamilyid');
 _obj.columns.push('prod_UOMCategory');
 _obj.columns.push('prod_Active');
@@ -79,16 +90,13 @@ var _contentprodfam=createJSON_New(objar,CRM);
 if (!returndataonly)
 {
 %>
-<script>
+	<script>
+	var products_prfa_productfamilyid_<%=prfa_productfamilyid %>=<%=_contentprodfam%>;
+	//raw html...for speed purposes
+	var html_products_prfa_productfamilyid_<%=prfa_productfamilyid %>=null;
+	</script>
 
-var products_prfa_productfamilyid_<%=prfa_productfamilyid %>=<%=_contentprodfam%>;
-
-//raw html...for speed purposes
-var html_products_prfa_productfamilyid_<%=prfa_productfamilyid %>=null;
-
-</script>
-
-<% }else{
+<% } else{
   Response.ContentType = "application/json";
 %>
 <%=_contentprodfam%>
